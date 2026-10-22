@@ -1,0 +1,473 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Toán 12 - Tiệm Cận Đồ Thị Hàm Số</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #eef2ff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .question-box {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* Bảng biến thiên chuẩn sách giáo khoa */
+        .variation-table {
+            margin: 15px auto;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 16px;
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .variation-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 8px;
+            vertical-align: middle;
+        }
+
+        .variation-table tr:first-child {
+            background: #f8fafc;
+            font-weight: bold;
+        }
+
+        .double-bar {
+            border-left: 3px double #4f46e5 !important;
+            border-right: 3px double #4f46e5 !important;
+        }
+
+        .arrow-cell {
+            height: 60px;
+            position: relative;
+            vertical-align: middle !important;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .option-item {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary-color);
+            background: #f8fafc;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background: #eef2ff;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .option-item.correct {
+            border-color: var(--success-color);
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--error-color);
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .explanation {
+            background: #f9fafb;
+            border-left: 4px solid var(--primary-color);
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .result-screen h2 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .score-badge {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Ôn Tập Toán 12</h1>
+        <p>Chủ đề: Tiệm cận đứng, tiệm cận ngang, tiệm cận xiên đồ thị hàm số</p>
+    </header>
+
+    <div id="quiz-screen">
+        <div class="quiz-info">
+            <span id="question-counter">Câu hỏi 1/10</span>
+            <span id="timer">Thời gian: 0s</span>
+        </div>
+
+        <div class="question-box" id="question-text">Đang tải câu hỏi...</div>
+
+        <ul class="options-list" id="options-container"></ul>
+
+        <div class="explanation" id="explanation-box">
+            <strong>Hướng dẫn giải: </strong><span id="explanation-text"></span>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Câu tiếp theo</button>
+        </div>
+    </div>
+
+    <div class="result-screen" id="result-screen">
+        <h2>Hoàn thành xuất sắc!</h2>
+        <p>Em đã hoàn thành bài ôn tập tiệm cận đồ thị hàm số.</p>
+        <div class="score-badge" id="final-score">0/10</div>
+        <button class="btn" onclick="restartQuiz()">Làm lại bài</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Câu 1. Tiệm cận ngang của đồ thị hàm số \\(y = \\frac{2x - 1}{3x + 1}\\) là:",
+            options: ["A. \\(y = \\frac{2}{3}\\)", "B. \\(x = -1\\)", "C. \\(y = 1\\)", "D. \\(x = 3\\)"],
+            correct: 0,
+            explanation: "Hệ số cao nhất của tử là 2, của mẫu là 3. Tiệm cận ngang là \\(y = \\frac{2}{3}\\)."
+        },
+        {
+            question: "Câu 2. Cho hàm số có bảng biến thiên như sau:",
+            table: `
+                <table class="variation-table">
+                    <tr>
+                        <td>\\( x \\)</td>
+                        <td>\\(-\\infty\\)</td>
+                        <td class="double-bar">\\(0\\)</td>
+                        <td>\\(1\\)</td>
+                        <td>\\(+\\infty\\)</td>
+                    </tr>
+                    <tr>
+                        <td>\\( y' \\)</td>
+                        <td>-</td>
+                        <td class="double-bar">-</td>
+                        <td>0</td>
+                        <td>+</td>
+                    </tr>
+                    <tr>
+                        <td>\\( y \\)</td>
+                        <td>\\(2\\)<br>\\(\\searrow\\)<br>\\(-4\\)</td>
+                        <td class="double-bar">\\(+\\infty\\)<br>\\(\\searrow\\)<br>\\(-2\\)</td>
+                        <td></td>
+                        <td><br>\\(\\nearrow\\)<br>\\(+\\infty\\)</td>
+                    </tr>
+                </table>
+            `,
+            subText: "Tổng số tiệm cận đứng và tiệm cận ngang của đồ thị hàm số đã cho là:",
+            options: ["A. 2", "B. 1", "C. 3", "D. 4"],
+            correct: 0,
+            explanation: "Dựa vào bảng biến thiên, đồ thị có 1 tiệm cận ngang \\(y = 2\\) và 1 tiệm cận đứng \\(x = 0\\). Tổng số tiệm cận là 2."
+        },
+        {
+            question: "Câu 3. Tiệm cận ngang của đồ thị hàm số \\(y = \\frac{-4x + 1}{3x + 2}\\) là:",
+            options: ["A. \\(y = 1\\)", "B. \\(x = -1\\)", "C. \\(y = -\\frac{4}{3}\\)", "D. \\(x = -3\\)"],
+            correct: 2,
+            explanation: "Lấy hệ số của \\(x\\) ở tử chia cho hệ số của \\(x\\) ở mẫu: \\(y = -\\frac{4}{3}\\)."
+        },
+        {
+            question: "Câu 4. Tìm tiệm cận ngang của đồ thị hàm số \\(y = \\frac{2x - 3}{x - 1}\\):",
+            options: ["A. \\(y = 1\\)", "B. \\(x = 1\\)", "C. \\(y = -3\\)", "D. \\(y = 2\\)"],
+            correct: 3,
+            explanation: "Hệ số bậc cao nhất: \\(y = \\frac{2}{1} = 2\\)."
+        },
+        {
+            question: "Câu 5. Dựa vào bảng biến thiên của hàm số dưới đây, hãy chọn khẳng định <b>SAI</b>:",
+            table: `
+                <table class="variation-table">
+                    <tr>
+                        <td>\\( x \\)</td>
+                        <td>\\(-\\infty\\)</td>
+                        <td class="double-bar">\\(-1\\)</td>
+                        <td>\\(+\\infty\\)</td>
+                    </tr>
+                    <tr>
+                        <td>\\( y' \\)</td>
+                        <td>+</td>
+                        <td class="double-bar">+</td>
+                        <td>+</td>
+                    </tr>
+                    <tr>
+                        <td>\\( y \\)</td>
+                        <td>\\(2\\)<br>\\(\\nearrow\\)<br>\\(+\\infty\\)</td>
+                        <td class="double-bar">\\(-\\infty\\)<br>\\(\\nearrow\\)<br>\\(2\\)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            `,
+            options: [
+                "A. Đồ thị hàm số có tiệm cận đứng \\(x = -1\\).",
+                "B. Đồ thị hàm số có 2 tiệm cận.",
+                "C. Đồ thị hàm số có điểm cực tiểu \\((2; -1)\\).",
+                "D. Đồ thị hàm số có tiệm cận ngang \\(y = 2\\)."
+            ],
+            correct: 2,
+            explanation: "Bảng biến thiên đồng biến trên các khoảng xác định và không đổi dấu \\(y'\\), do đó hàm số không có cực trị. Khẳng định C là sai."
+        },
+        {
+            question: "Câu 6. Đồ thị hàm số \\(y = \\frac{x^2 - 2x - 3}{x - 1}\\) có tiệm cận xiên là đường thẳng:",
+            options: ["A. \\(y = x - 1\\)", "B. \\(y = x + 1\\)", "C. \\(y = x - 2\\)", "D. \\(y = 2x - 1\\)"],
+            correct: 0,
+            explanation: "Thực hiện phép chia đa thức \\((x^2 - 2x - 3)\\) cho \\((x - 1)\\) ta được thương là \\(x - 1\\). Vậy tiệm cận xiên là \\(y = x - 1\\)."
+        },
+        {
+            question: "Câu 7. Tiệm cận xiên của đồ thị hàm số \\(y = \\frac{2x^2 - x + 1}{x + 1}\\) là:",
+            options: ["A. \\(y = 2x - 3\\)", "B. \\(y = 2x + 1\\)", "C. \\(y = x - 2\\)", "D. \\(y = 2x - 2\\)"],
+            correct: 0,
+            explanation: "Chia tử cho mẫu: \\((2x^2 - x + 1) : (x + 1) = 2x - 3\\) dư \\(4\\). Đường tiệm cận xiên là \\(y = 2x - 3\\)."
+        },
+        {
+            question: "Câu 8. Cho hàm số \\(y = x + 1 + \\frac{3}{x - 2}\\). Tiệm cận xiên của đồ thị hàm số là đường thẳng:",
+            options: ["A. \\(y = x + 1\\)", "B. \\(y = x - 2\\)", "C. \\(y = x + 3\\)", "D. \\(y = 3x - 2\\)"],
+            correct: 0,
+            explanation: "Hàm số có dạng \\(y = ax + b + \\frac{c}{x - x_0}\\) với phần dư tiến về 0 khi \\(x \\to \\pm\\infty\\). Do đó tiệm cận xiên là phần đa thức \\(y = x + 1\\)."
+        },
+        {
+            question: "Câu 9. Phương trình đường tiệm cận xiên của đồ thị hàm số \\(y = \\frac{x^2 + 2x - 1}{x - 1}\\) là:",
+            options: ["A. \\(y = x + 3\\)", "B. \\(y = x - 1\\)", "C. \\(y = 2x + 1\\)", "D. \\(y = x + 2\\)"],
+            correct: 0,
+            explanation: "Thực hiện phép chia đa thức: \\(\\frac{x^2 + 2x - 1}{x - 1} = x + 3 + \\frac{2}{x - 1}\\). Vậy tiệm cận xiên là \\(y = x + 3\\)."
+        },
+        {
+            question: "Câu 10. Tiệm cận xiên của đồ thị hàm số \\(y = 2x - 1 + \\frac{1}{x + 1}\\) là:",
+            options: ["A. \\(y = 2x - 1\\)", "B. \\(y = x + 1\\)", "C. \\(y = 2x + 1\\)", "D. \\(y = x - 1\\)"],
+            correct: 0,
+            explanation: "Khi \\(x \\to \\pm\\infty\\), phân số \\(\\frac{1}{x + 1}\\) tiến tới 0. Đường tiệm cận xiên là phần đa thức \\(y = 2x - 1\\)."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+    let seconds = 0;
+    let timerInterval;
+
+    const questionCounter = document.getElementById("question-counter");
+    const timerDisplay = document.getElementById("timer");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const explanationBox = document.getElementById("explanation-box");
+    const explanationText = document.getElementById("explanation-text");
+    const nextBtn = document.getElementById("next-btn");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const finalScore = document.getElementById("final-score");
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            seconds++;
+            timerDisplay.innerText = `Thời gian: ${seconds}s`;
+        }, 1000);
+    }
+
+    function loadQuestion() {
+        answered = false;
+        nextBtn.disabled = true;
+        explanationBox.style.display = "none";
+
+        let currentQ = questions[currentQuestionIndex];
+        questionCounter.innerText = `Câu hỏi ${currentQuestionIndex + 1}/10`;
+        
+        let htmlContent = currentQ.question;
+        if (currentQ.table) {
+            htmlContent += currentQ.table;
+        }
+        if (currentQ.subText) {
+            htmlContent += "<div style='margin-top: 10px;'>" + currentQ.subText + "</div>";
+        }
+        questionText.innerHTML = htmlContent;
+
+        optionsContainer.innerHTML = "";
+        currentQ.options.forEach((option, index) => {
+            const li = document.createElement("li");
+            li.className = "option-item";
+            li.innerHTML = option;
+            li.onclick = () => selectOption(index);
+            optionsContainer.appendChild(li);
+        });
+
+        if (window.MathJax) {
+            MathJax.typesetPromise().catch((err) => console.log(err));
+        }
+    }
+
+    function selectOption(selectedIndex) {
+        if (answered) return;
+        answered = true;
+
+        let currentQ = questions[currentQuestionIndex];
+        const optionItems = optionsContainer.children;
+
+        if (selectedIndex === currentQ.correct) {
+            optionItems[selectedIndex].classList.add("correct");
+            score++;
+        } else {
+            optionItems[selectedIndex].classList.add("incorrect");
+            optionItems[currentQ.correct].classList.add("correct");
+        }
+
+        explanationText.innerHTML = currentQ.explanation;
+        explanationBox.style.display = "block";
+        nextBtn.disabled = false;
+
+        if (currentQuestionIndex === questions.length - 1) {
+            nextBtn.innerText = "Xem kết quả";
+        }
+
+        if (window.MathJax) {
+            MathJax.typesetPromise().catch((err) => console.log(err));
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            clearInterval(timerInterval);
+            quizScreen.style.display = "none";
+            resultScreen.style.display = "block";
+            finalScore.innerText = `${score}/10`;
+        }
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        seconds = 0;
+        quizScreen.style.display = "block";
+        resultScreen.style.display = "none";
+        nextBtn.innerText = "Câu tiếp theo";
+        clearInterval(timerInterval);
+        startTimer();
+        loadQuestion();
+    }
+
+    startTimer();
+    loadQuestion();
+</script>
+
+</body>
+</html>
